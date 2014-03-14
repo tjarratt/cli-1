@@ -37,6 +37,8 @@ type App struct {
 	Author string
 	// Author e-mail
 	Email string
+
+	UnknownCommandCalled func(context *Context)
 }
 
 // Tries to find out when this binary was compiled.
@@ -123,6 +125,11 @@ func (a *App) Run(arguments []string) error {
 		c := a.Command(name)
 		if c != nil {
 			return c.Run(context)
+		} else {
+			if a.UnknownCommandCalled != nil {
+				a.UnknownCommandCalled(context)
+			}
+			return nil
 		}
 	}
 
